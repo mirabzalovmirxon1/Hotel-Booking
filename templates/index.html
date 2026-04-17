@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Hotel Book</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: linear-gradient(270deg, #141e30, #243b55);
+  background-size: 400% 400%;
+  animation: bg 8s infinite;
+  color: white;
+}
+
+@keyframes bg {
+  0% {background-position: 0%}
+  50% {background-position: 100%}
+  100% {background-position: 0%}
+}
+
+.container {
+  text-align: center;
+  margin-top: 80px;
+}
+
+input {
+  padding: 10px;
+  margin: 8px;
+  border-radius: 8px;
+  border: none;
+}
+
+button {
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  background: cyan;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 15px cyan;
+}
+
+.switch {
+  cursor: pointer;
+  color: cyan;
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.card {
+  margin: 15px;
+  padding: 20px;
+  width: 220px;
+  border-radius: 15px;
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 20px cyan;
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="login" class="container">
+  <h1>🏨 Hotel Book</h1>
+  <input id="l_username" placeholder="Username"><br>
+  <input id="l_password" type="password" placeholder="Password"><br>
+  <button onclick="login()">Login</button>
+  <p class="switch" onclick="showRegister()">No account? Register</p>
+</div>
+
+<!-- REGISTER -->
+<div id="register" class="container" style="display:none;">
+  <h1>Register</h1>
+  <input id="r_name" placeholder="Full name"><br>
+  <input id="r_username" placeholder="Username"><br>
+  <input id="r_age" placeholder="Age"><br>
+  <input id="r_phone" placeholder="Phone number"><br>
+  <input id="r_password" type="password" placeholder="Password"><br>
+  <button onclick="register()">Register</button>
+  <p class="switch" onclick="showLogin()">Already have account? Login</p>
+</div>
+
+<!-- HOME -->
+<div id="home" style="display:none;">
+  <h2 style="text-align:center;">Available Rooms</h2>
+  <div class="cards" id="rooms"></div>
+</div>
+
+<script>
+const API = "http://127.0.0.1:8000/api/api";
+
+function showRegister(){
+  login.style.display = "none";
+  register.style.display = "block";
+}
+
+function showLogin(){
+  register.style.display = "none";
+  login.style.display = "block";
+}
+
+// LOGIN
+async function login() {
+  const username = l_username.value;
+  const password = l_password.value;
+
+  const res = await fetch(API + "token/", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({username, password})
+  });
+
+  const data = await res.json();
+
+  if (data.access) {
+    localStorage.setItem("token", data.access);
+    login.style.display = "none";
+    home.style.display = "block";
+    loadRooms();
+  } else {
+    alert("❌ Login error");
+  }
+}
+
+// REGISTER
+async function register() {
+  const res = await fetch(API + "register/", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      full_name: r_name.value,
+      username: r_username.value,
+      age: r_age.value,
+      phone_number: r_phone.value,
+      password: r_password.value
+    })
+  });
+
+  if (res.status === 201) {
+    alert("✅ Registered! Now login");
+    showLogin();
+  } else {
+    alert("❌ Register error");
+  }
+}
+
+// LOAD ROOMS
+async function loadRooms() {
+  const res = await fetch(API + "rooms/");
+  const rooms = await res.json();
+
+  rooms.forEach(room => {
+    const div = document.createElement("div");
+    div.className = "card";
+
+    div.innerHTML = `
+      <h3>Room ${room.room_number}</h3>
+      <p>${room.room_type}</p>
+      <p>$${room.price}</p>
+      <button onclick="book(${room.id})">Book</button>
+    `;
+
+    roomsContainer.appendChild(div);
+  });
+}
+
+// BOOK
+async function book(id) {
+  const token = localStorage.getItem("token");
+
+  await fetch(API + "booking/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + token
+    },
+    body: JSON.stringify({room: id})
+  });
+
+  alert("✅ Booked!");
+}
+</script>
+
+</body>
+</html>
