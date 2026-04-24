@@ -1,202 +1,226 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Hotel Book</title>
-
-<style>
-body {
-  margin: 0;
-  font-family: Arial;
-  background: linear-gradient(270deg, #141e30, #243b55);
-  background-size: 400% 400%;
-  animation: bg 8s infinite;
-  color: white;
-}
-
-@keyframes bg {
-  0% {background-position: 0%}
-  50% {background-position: 100%}
-  100% {background-position: 0%}
-}
-
-.container {
-  text-align: center;
-  margin-top: 80px;
-}
-
-input {
-  padding: 10px;
-  margin: 8px;
-  border-radius: 8px;
-  border: none;
-}
-
-button {
-  padding: 10px 20px;
-  border-radius: 10px;
-  border: none;
-  background: cyan;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-button:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0 15px cyan;
-}
-
-.switch {
-  cursor: pointer;
-  color: cyan;
-}
-
-.cards {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.card {
-  margin: 15px;
-  padding: 20px;
-  width: 220px;
-  border-radius: 15px;
-  background: rgba(255,255,255,0.1);
-  backdrop-filter: blur(10px);
-  transition: 0.3s;
-}
-
-.card:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0 20px cyan;
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LUMINARY — Premium Hotel Booking</title>
+  <link rel="stylesheet" href="/static/css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
 </head>
-
 <body>
 
-<!-- LOGIN -->
-<div id="login" class="container">
-  <h1>🏨 Hotel Book</h1>
-  <input id="l_username" placeholder="Username"><br>
-  <input id="l_password" type="password" placeholder="Password"><br>
-  <button onclick="login()">Login</button>
-  <p class="switch" onclick="showRegister()">No account? Register</p>
-</div>
+  <!-- ═══════════════════ BACKGROUND ═══════════════════ -->
+  <div class="bg-grid"></div>
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+  <div class="bg-orb orb-3"></div>
 
-<!-- REGISTER -->
-<div id="register" class="container" style="display:none;">
-  <h1>Register</h1>
-  <input id="r_name" placeholder="Full name"><br>
-  <input id="r_username" placeholder="Username"><br>
-  <input id="r_age" placeholder="Age"><br>
-  <input id="r_phone" placeholder="Phone number"><br>
-  <input id="r_password" type="password" placeholder="Password"><br>
-  <button onclick="register()">Register</button>
-  <p class="switch" onclick="showLogin()">Already have account? Login</p>
-</div>
+  <!-- ═══════════════════ TOAST CONTAINER ═══════════════════ -->
+  <div id="toast-container"></div>
 
-<!-- HOME -->
-<div id="home" style="display:none;">
-  <h2 style="text-align:center;">Available Rooms</h2>
-  <div class="cards" id="rooms"></div>
-</div>
+  <!-- ═══════════════════ NAVBAR ═══════════════════ -->
+  <nav id="navbar" class="hidden">
+    <div class="nav-inner">
+      <div class="nav-logo">
+        <span class="logo-icon">✦</span>
+        <span>LUMINARY</span>
+      </div>
+      <div class="nav-right">
+        <div class="nav-user">
+          <div class="user-avatar" id="nav-avatar">L</div>
+          <span id="nav-username">Guest</span>
+        </div>
+        <button class="btn-logout" id="logout-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Logout
+        </button>
+      </div>
+    </div>
+  </nav>
 
-<script>
-const API = "http://127.0.0.1:8000/api/api";
+  <!-- ═══════════════════ AUTH PAGE ═══════════════════ -->
+  <div id="auth-page" class="page active">
+    <div class="auth-container">
 
-function showRegister(){
-  login.style.display = "none";
-  register.style.display = "block";
-}
+      <!-- Hero text -->
+      <div class="auth-hero">
+        <div class="hero-badge">✦ Premium Experience</div>
+        <h1 class="hero-title">Where Luxury<br /><em>Meets Tomorrow</em></h1>
+        <p class="hero-sub">Curated rooms. Seamless booking.<br />Unforgettable stays.</p>
+        <div class="hero-stats">
+          <div class="stat"><span class="stat-num">240+</span><span class="stat-label">Rooms</span></div>
+          <div class="stat-divider"></div>
+          <div class="stat"><span class="stat-num">98%</span><span class="stat-label">Satisfaction</span></div>
+          <div class="stat-divider"></div>
+          <div class="stat"><span class="stat-num">24/7</span><span class="stat-label">Support</span></div>
+        </div>
+      </div>
 
-function showLogin(){
-  register.style.display = "none";
-  login.style.display = "block";
-}
+      <!-- Auth Card -->
+      <div class="auth-card glass">
+        <div class="auth-tabs">
+          <button class="tab-btn active" data-tab="login">Sign In</button>
+          <button class="tab-btn" data-tab="register">Create Account</button>
+          <div class="tab-slider"></div>
+        </div>
 
-// LOGIN
-async function login() {
-  const username = l_username.value;
-  const password = l_password.value;
+        <!-- LOGIN FORM -->
+        <form id="login-form" class="auth-form active" autocomplete="off">
+          <div class="form-group">
+            <label>Username</label>
+            <div class="input-wrap">
+              <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <input type="text" id="login-username" placeholder="your_username" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <div class="input-wrap">
+              <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input type="password" id="login-password" placeholder="••••••••" required />
+              <button type="button" class="toggle-pw" data-target="login-password">
+                <svg class="eye-icon show-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                <svg class="eye-icon hide-icon hidden" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+              </button>
+            </div>
+          </div>
+          <button type="submit" class="btn-primary" id="login-btn">
+            <span class="btn-text">Sign In</span>
+            <span class="btn-loader hidden"></span>
+          </button>
+        </form>
 
-  const res = await fetch(API + "token/", {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({username, password})
-  });
+        <!-- REGISTER FORM -->
+        <form id="register-form" class="auth-form" autocomplete="off">
+          <div class="form-group">
+            <label>Username</label>
+            <div class="input-wrap">
+              <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <input type="text" id="reg-username" placeholder="choose_username" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <div class="input-wrap">
+              <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              <input type="email" id="reg-email" placeholder="you@example.com" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <div class="input-wrap">
+              <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input type="password" id="reg-password" placeholder="••••••••" required />
+              <button type="button" class="toggle-pw" data-target="reg-password">
+                <svg class="eye-icon show-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                <svg class="eye-icon hide-icon hidden" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+              </button>
+            </div>
+          </div>
+          <button type="submit" class="btn-primary" id="register-btn">
+            <span class="btn-text">Create Account</span>
+            <span class="btn-loader hidden"></span>
+          </button>
+        </form>
 
-  const data = await res.json();
+      </div>
+    </div>
+  </div>
 
-  if (data.access) {
-    localStorage.setItem("token", data.access);
-    login.style.display = "none";
-    home.style.display = "block";
-    loadRooms();
-  } else {
-    alert("❌ Login error");
-  }
-}
+  <!-- ═══════════════════ DASHBOARD PAGE ═══════════════════ -->
+  <div id="dashboard-page" class="page">
 
-// REGISTER
-async function register() {
-  const res = await fetch(API + "register/", {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({
-      full_name: r_name.value,
-      username: r_username.value,
-      age: r_age.value,
-      phone_number: r_phone.value,
-      password: r_password.value
-    })
-  });
+    <!-- Hero section -->
+    <div class="dashboard-hero">
+      <div class="dashboard-hero-inner">
+        <div class="welcome-tag">✦ Welcome back</div>
+        <h2 class="dashboard-title">Find Your Perfect <em>Room</em></h2>
+        <p class="dashboard-sub">Browse our curated collection of premium rooms</p>
 
-  if (res.status === 201) {
-    alert("✅ Registered! Now login");
-    showLogin();
-  } else {
-    alert("❌ Register error");
-  }
-}
+        <!-- Search & Filter -->
+        <div class="controls-bar glass">
+          <div class="search-wrap">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="search-input" placeholder="Search rooms..." />
+          </div>
+          <div class="filter-btns">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="price-asc">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+              Price Low
+            </button>
+            <button class="filter-btn" data-filter="price-desc">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+              Price High
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 
-// LOAD ROOMS
-async function loadRooms() {
-  const res = await fetch(API + "rooms/");
-  const rooms = await res.json();
+    <!-- Room count info -->
+    <div class="rooms-meta">
+      <span id="rooms-count-label">Loading rooms…</span>
+    </div>
 
-  rooms.forEach(room => {
-    const div = document.createElement("div");
-    div.className = "card";
+    <!-- Rooms grid -->
+    <div id="rooms-grid" class="rooms-grid">
+      <!-- Skeleton loaders -->
+      <div class="room-skeleton glass"></div>
+      <div class="room-skeleton glass"></div>
+      <div class="room-skeleton glass"></div>
+      <div class="room-skeleton glass"></div>
+      <div class="room-skeleton glass"></div>
+      <div class="room-skeleton glass"></div>
+    </div>
 
-    div.innerHTML = `
-      <h3>Room ${room.room_number}</h3>
-      <p>${room.room_type}</p>
-      <p>$${room.price}</p>
-      <button onclick="book(${room.id})">Book</button>
-    `;
+  </div>
 
-    roomsContainer.appendChild(div);
-  });
-}
+  <!-- ═══════════════════ BOOKING MODAL ═══════════════════ -->
+  <div id="booking-modal" class="modal-overlay hidden">
+    <div class="modal glass">
+      <button class="modal-close" id="modal-close">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div class="modal-badge">Book Now</div>
+      <h3 class="modal-title" id="modal-room-title">Room 101</h3>
+      <p class="modal-type" id="modal-room-type">Standard</p>
+      <div class="modal-price-row">
+        <span class="modal-price" id="modal-room-price">$120</span>
+        <span class="modal-price-label">/ night</span>
+      </div>
 
-// BOOK
-async function book(id) {
-  const token = localStorage.getItem("token");
+      <div class="modal-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Check-In</label>
+            <div class="input-wrap">
+              <svg class="input-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <input type="date" id="booking-checkin" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Check-Out</label>
+            <div class="input-wrap">
+              <svg class="input-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <input type="date" id="booking-checkout" />
+            </div>
+          </div>
+        </div>
+        <button class="btn-book" id="confirm-booking-btn" data-room-id="">
+          <span class="btn-book-text">Confirm Booking</span>
+          <span class="btn-book-loader hidden"></span>
+          <span class="btn-book-check hidden">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            Booked!
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
 
-  await fetch(API + "booking/", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer " + token
-    },
-    body: JSON.stringify({room: id})
-  });
-
-  alert("✅ Booked!");
-}
-</script>
-
+  <script src="/static/js/app.js"></script>
 </body>
 </html>

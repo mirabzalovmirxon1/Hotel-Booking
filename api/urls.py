@@ -7,7 +7,7 @@ urlpatterns = [
     path('schema/', SpectacularAPIView.as_view(), name='schema'),
 
 
-    path('api/', include('accounts.urls')),
+    path('', include('accounts.urls')),
     path('rooms/', include('rooms.urls')),
     path('booking/', include('booking.urls')),
 ]

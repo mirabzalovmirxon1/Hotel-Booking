@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LUMINARY — Admin Console</title>
+  <link rel="stylesheet" href="admin.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ═══════════ BACKGROUND LAYERS ═══════════ -->
+  <div class="bg-noise"></div>
+  <canvas id="bg-canvas"></canvas>
+  <div class="bg-vignette"></div>
+
+  <!-- ═══════════ TOAST CONTAINER ═══════════ -->
+  <div id="toast-container" aria-live="polite"></div>
+
+  <!-- ══════════════════════════════════════════
+       LOGIN PAGE
+  ══════════════════════════════════════════ -->
+  <div id="login-page" class="page active">
+    <div class="login-wrap">
+      <div class="login-brand">
+        <div class="brand-mark">
+          <div class="mark-inner"></div>
+        </div>
+        <div class="brand-text">
+          <div class="brand-name">LUMINARY</div>
+          <div class="brand-sub">Admin Console</div>
+        </div>
+      </div>
+
+      <div class="login-card glass-card">
+        <div class="login-header">
+          <h1>Welcome back</h1>
+          <p>Sign in to access your admin panel</p>
+        </div>
+
+        <form id="login-form" novalidate>
+          <div class="field-group">
+            <label class="field-label" for="admin-user">Username</label>
+            <div class="field-wrap">
+              <span class="field-icon">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </span>
+              <input type="text" id="admin-user" placeholder="admin" autocomplete="username" required />
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="admin-pass">Password</label>
+            <div class="field-wrap">
+              <span class="field-icon">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              </span>
+              <input type="password" id="admin-pass" placeholder="••••••••" autocomplete="current-password" required />
+              <button type="button" class="pw-toggle" data-target="admin-pass" aria-label="Toggle password">
+                <svg class="eye-show" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                <svg class="eye-hide gone" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-login" id="login-btn">
+            <span class="btn-label">Access Dashboard</span>
+            <span class="btn-spin gone"></span>
+            <span class="btn-arrow">→</span>
+          </button>
+        </form>
+
+        <div class="login-footer">
+          <div class="security-badge">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Secured connection
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       ADMIN SHELL (Sidebar + Content)
+  ══════════════════════════════════════════ -->
+  <div id="admin-shell" class="page">
+
+    <!-- ──── SIDEBAR ──── -->
+    <aside id="sidebar">
+      <div class="sidebar-top">
+        <div class="sidebar-brand">
+          <div class="brand-mark small">
+            <div class="mark-inner"></div>
+          </div>
+          <div>
+            <div class="sidebar-brand-name">LUMINARY</div>
+            <div class="sidebar-brand-role">Admin Console</div>
+          </div>
+        </div>
+
+        <div class="sidebar-admin-info">
+          <div class="admin-avatar" id="sidebar-avatar">A</div>
+          <div>
+            <div class="admin-name" id="sidebar-name">Admin</div>
+            <div class="admin-role-tag">Super Admin</div>
+          </div>
+        </div>
+
+        <nav class="sidebar-nav">
+          <div class="nav-section-label">Navigation</div>
+          <a class="nav-item active" data-section="dashboard" href="#">
+            <span class="nav-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            </span>
+            <span class="nav-label">Dashboard</span>
+            <span class="nav-pip"></span>
+          </a>
+          <a class="nav-item" data-section="rooms" href="#">
+            <span class="nav-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </span>
+            <span class="nav-label">Rooms</span>
+            <span class="nav-pip"></span>
+          </a>
+          <a class="nav-item" data-section="add-room" href="#">
+            <span class="nav-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </span>
+            <span class="nav-label">Add Room</span>
+            <span class="nav-pip"></span>
+          </a>
+        </nav>
+      </div>
+
+      <div class="sidebar-bottom">
+        <div class="system-status">
+          <span class="status-dot pulse"></span>
+          <span class="status-text">System Online</span>
+        </div>
+        <button class="btn-logout" id="logout-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Sign Out
+        </button>
+      </div>
+    </aside>
+
+    <!-- ──── MAIN CONTENT ──── -->
+    <main id="main-content">
+
+      <!-- TOP BAR -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <div class="topbar-breadcrumb">
+            <span class="breadcrumb-root">Console</span>
+            <span class="breadcrumb-sep">/</span>
+            <span class="breadcrumb-current" id="breadcrumb-label">Dashboard</span>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <div class="topbar-time" id="topbar-time"></div>
+          <div class="topbar-divider"></div>
+          <div class="topbar-user">
+            <div class="topbar-avatar" id="topbar-avatar">A</div>
+            <span id="topbar-name">Admin</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- ─── SECTION: DASHBOARD ─── -->
+      <section id="section-dashboard" class="content-section active">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Overview</h2>
+            <p class="section-sub">Real-time hotel operation metrics</p>
+          </div>
+          <button class="btn-icon-refresh" id="refresh-stats-btn" title="Refresh">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          </button>
+        </div>
+
+        <!-- STAT CARDS -->
+        <div class="stats-grid">
+          <div class="stat-card glass-card" id="stat-total">
+            <div class="stat-icon-wrap total">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </div>
+            <div class="stat-body">
+              <div class="stat-value" id="val-total">—</div>
+              <div class="stat-label">Total Rooms</div>
+            </div>
+            <div class="stat-trend" id="trend-total"></div>
+          </div>
+
+          <div class="stat-card glass-card" id="stat-available">
+            <div class="stat-icon-wrap avail">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="stat-body">
+              <div class="stat-value" id="val-avail">—</div>
+              <div class="stat-label">Available</div>
+            </div>
+            <div class="stat-trend" id="trend-avail"></div>
+          </div>
+
+          <div class="stat-card glass-card" id="stat-booked">
+            <div class="stat-icon-wrap booked">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
+            <div class="stat-body">
+              <div class="stat-value" id="val-booked">—</div>
+              <div class="stat-label">Booked</div>
+            </div>
+            <div class="stat-trend" id="trend-booked"></div>
+          </div>
+
+          <div class="stat-card glass-card" id="stat-occupancy">
+            <div class="stat-icon-wrap occ">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            </div>
+            <div class="stat-body">
+              <div class="stat-value" id="val-occ">—</div>
+              <div class="stat-label">Occupancy Rate</div>
+            </div>
+            <div class="stat-bar-wrap">
+              <div class="stat-bar-track"><div class="stat-bar-fill" id="occ-bar" style="width:0%"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- OCCUPANCY DONUT + RECENT LIST -->
+        <div class="dashboard-grid-lower">
+          <div class="glass-card donut-card">
+            <div class="card-header-row">
+              <h3 class="card-title">Room Status</h3>
+              <span class="card-badge" id="donut-date"></span>
+            </div>
+            <div class="donut-wrap">
+              <svg class="donut-svg" viewBox="0 0 140 140" id="donut-svg">
+                <circle class="donut-track" cx="70" cy="70" r="54" fill="none" stroke-width="16"/>
+                <circle class="donut-avail" cx="70" cy="70" r="54" fill="none" stroke-width="16" stroke-dasharray="0 339.3" id="donut-avail-arc"/>
+                <circle class="donut-booked" cx="70" cy="70" r="54" fill="none" stroke-width="16" stroke-dasharray="0 339.3" id="donut-booked-arc"/>
+              </svg>
+              <div class="donut-center">
+                <div class="donut-pct" id="donut-pct">0%</div>
+                <div class="donut-lbl">Occupied</div>
+              </div>
+            </div>
+            <div class="donut-legend">
+              <div class="legend-item"><span class="legend-dot avail"></span>Available</div>
+              <div class="legend-item"><span class="legend-dot booked"></span>Booked</div>
+            </div>
+          </div>
+
+          <div class="glass-card recent-card">
+            <div class="card-header-row">
+              <h3 class="card-title">Recent Rooms</h3>
+              <button class="card-action" data-section="rooms">View All →</button>
+            </div>
+            <div class="recent-list" id="recent-list">
+              <div class="recent-skeleton"></div>
+              <div class="recent-skeleton"></div>
+              <div class="recent-skeleton"></div>
+              <div class="recent-skeleton"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── SECTION: ROOMS ─── -->
+      <section id="section-rooms" class="content-section">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Room Management</h2>
+            <p class="section-sub">View, search and manage all hotel rooms</p>
+          </div>
+          <button class="btn-primary" id="add-room-shortcut">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Room
+          </button>
+        </div>
+
+        <!-- Controls -->
+        <div class="table-controls glass-card">
+          <div class="search-box">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="room-search" placeholder="Search by number or type…" />
+          </div>
+          <div class="filter-group">
+            <button class="filter-pill active" data-filter="all">All</button>
+            <button class="filter-pill" data-filter="available">Available</button>
+            <button class="filter-pill" data-filter="booked">Booked</button>
+          </div>
+          <div class="rooms-count-info">
+            <span id="rooms-count-display">— rooms</span>
+          </div>
+        </div>
+
+        <!-- Rooms grid -->
+        <div class="rooms-grid" id="rooms-grid">
+          <!-- populated by JS -->
+        </div>
+      </section>
+
+      <!-- ─── SECTION: ADD ROOM ─── -->
+      <section id="section-add-room" class="content-section">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Add New Room</h2>
+            <p class="section-sub">Register a new room to the hotel inventory</p>
+          </div>
+        </div>
+
+        <div class="add-room-layout">
+          <div class="glass-card form-card">
+            <div class="form-card-header">
+              <div class="form-step-badge">Room Details</div>
+            </div>
+
+            <form id="add-room-form" novalidate>
+              <div class="form-grid">
+                <div class="field-group">
+                  <label class="field-label" for="f-room-number">
+                    Room Number
+                    <span class="label-required">*</span>
+                  </label>
+                  <div class="field-wrap">
+                    <span class="field-icon">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+                    </span>
+                    <input type="text" id="f-room-number" placeholder="e.g. 101" required />
+                  </div>
+                  <span class="field-hint">Unique room identifier</span>
+                </div>
+
+                <div class="field-group">
+                  <label class="field-label" for="f-room-type">
+                    Room Type
+                    <span class="label-required">*</span>
+                  </label>
+                  <div class="field-wrap select-wrap">
+                    <span class="field-icon">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                    </span>
+                    <select id="f-room-type" required>
+                      <option value="">Select type…</option>
+                      <option value="Standard">Standard</option>
+                      <option value="Classic">Classic</option>
+                      <option value="Super Classic">Super Classic</option>
+                      <option value="Suite">Suite</option>
+                      <option value="Deluxe">Deluxe</option>
+                    </select>
+                    <span class="select-arrow">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                    </span>
+                  </div>
+                </div>
+
+                <div class="field-group">
+                  <label class="field-label" for="f-price">
+                    Price per Night (USD)
+                    <span class="label-required">*</span>
+                  </label>
+                  <div class="field-wrap">
+                    <span class="field-icon field-prefix">$</span>
+                    <input type="number" id="f-price" placeholder="0.00" min="0" step="0.01" required />
+                  </div>
+                  <span class="field-hint">Set the nightly rate</span>
+                </div>
+
+                <div class="field-group">
+                  <label class="field-label" for="f-status">Initial Status</label>
+                  <div class="field-wrap select-wrap">
+                    <span class="field-icon">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    </span>
+                    <select id="f-status">
+                      <option value="available">Available</option>
+                      <option value="booked">Booked</option>
+                    </select>
+                    <span class="select-arrow">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-actions">
+                <button type="button" class="btn-ghost" id="reset-form-btn">Clear Form</button>
+                <button type="submit" class="btn-primary" id="add-room-btn">
+                  <span class="btn-label">Create Room</span>
+                  <span class="btn-spin gone"></span>
+                  <svg class="btn-check gone" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Preview card -->
+          <div class="glass-card preview-card">
+            <div class="preview-label">Live Preview</div>
+            <div class="preview-room-card" id="preview-room-card">
+              <div class="preview-badge" id="preview-badge">Standard</div>
+              <div class="preview-num" id="preview-num">Room —</div>
+              <div class="preview-type" id="preview-type">Select a type</div>
+              <div class="preview-divider"></div>
+              <div class="preview-price-row">
+                <span class="preview-price" id="preview-price">$0.00</span>
+                <span class="preview-per">/night</span>
+              </div>
+              <div class="preview-status" id="preview-status">
+                <span class="status-chip available">Available</span>
+              </div>
+            </div>
+            <div class="preview-hint">Preview updates as you type</div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ═══════════ DELETE CONFIRMATION MODAL ═══════════ -->
+  <div id="delete-modal" class="modal-overlay gone">
+    <div class="modal-box glass-card">
+      <div class="modal-icon danger">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+      </div>
+      <h3 class="modal-title">Delete Room?</h3>
+      <p class="modal-body">This will permanently remove <strong id="delete-room-name">Room 101</strong> from the system. This action cannot be undone.</p>
+      <div class="modal-actions">
+        <button class="btn-ghost" id="cancel-delete">Cancel</button>
+        <button class="btn-danger" id="confirm-delete">
+          <span class="btn-label">Delete Room</span>
+          <span class="btn-spin gone"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ SIDEBAR OVERLAY (mobile) ═══════════ -->
+  <div id="sidebar-overlay" class="sidebar-overlay gone"></div>
+
+  <script src="admin.js"></script>
+</body>
+</html>

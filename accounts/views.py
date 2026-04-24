@@ -4,6 +4,10 @@ from rest_framework import status
 from .serializers import RegisterSerializer, LoginSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from drf_spectacular.utils import extend_schema
+from django.contrib.auth import authenticate
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
 
 class RegisterView(APIView):
 
@@ -31,3 +35,14 @@ class LoginView(APIView):
                 "refresh": str(refresh),
             })
         return Response(serializer.errors, status=400)
+            
+    @api_view(['POST'])
+    def login_view(request):
+        username = request.data.get('username')
+        password = request.data.get('password')
+
+        user = authenticate(username=username, password=password)
+
+        if user:
+            return Response({"success": True})
+        return Response({"error": "Invalid credentials"}, status=400)
