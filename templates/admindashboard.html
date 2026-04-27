@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="uz" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LuxStay — Admin Dashboard</title>
+  <link rel="stylesheet" href="../static/css/admin.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">
+      <i class="fas fa-building-columns"></i>
+      <span>LuxStay</span>
+    </div>
+    <button class="sidebar-close" onclick="toggleSidebar()"><i class="fas fa-times"></i></button>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="#" class="nav-item active" onclick="showAdminPage('dashboard', this)">
+      <i class="fas fa-gauge-high"></i><span>Dashboard</span>
+    </a>
+    <a href="#" class="nav-item" onclick="showAdminPage('rooms', this)">
+      <i class="fas fa-bed"></i><span>Rooms</span>
+    </a>
+    <a href="#" class="nav-item" onclick="showAdminPage('bookings', this)">
+      <i class="fas fa-calendar-check"></i><span>Bookings</span>
+    </a>
+    <a href="#" class="nav-item" onclick="showAdminPage('users', this)">
+      <i class="fas fa-users"></i><span>Users</span>
+    </a>
+    <a href="#" class="nav-item" onclick="showAdminPage('settings', this)">
+      <i class="fas fa-gear"></i><span>Settings</span>
+    </a>
+    <a href="index.html" class="nav-item">
+      <i class="fas fa-arrow-left"></i><span>User Site</span>
+    </a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="admin-user">
+      <img src="https://ui-avatars.com/api/?name=Admin&background=1a56db&color=fff" alt="Admin" />
+      <div>
+        <p>Admin User</p>
+        <small>Super Admin</small>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<div class="admin-main" id="adminMain">
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+      <div class="breadcrumb" id="breadcrumb">Dashboard</div>
+    </div>
+    <div class="topbar-right">
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search..." />
+      </div>
+      <button class="theme-toggle" onclick="toggleAdminTheme()"><i class="fas fa-moon"></i></button>
+      <div class="notification-btn">
+        <i class="fas fa-bell"></i>
+        <span class="badge">3</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ DASHBOARD PAGE ============ -->
+  <div id="apage-dashboard" class="apage active">
+    <div class="page-title">
+      <h1>Dashboard Overview</h1>
+      <p>Welcome back, Admin! Here's what's happening today.</p>
+    </div>
+
+    <!-- Stat Cards -->
+    <div class="stats-grid">
+      <div class="stat-card glass">
+        <div class="stat-icon blue"><i class="fas fa-users"></i></div>
+        <div class="stat-info">
+          <p>Total Users</p>
+          <h2 class="count-up" data-target="1248">0</h2>
+        </div>
+        <div class="stat-trend up"><i class="fas fa-arrow-trend-up"></i> 12%</div>
+      </div>
+      <div class="stat-card glass">
+        <div class="stat-icon green"><i class="fas fa-bed"></i></div>
+        <div class="stat-info">
+          <p>Total Rooms</p>
+          <h2 class="count-up" data-target="86">0</h2>
+        </div>
+        <div class="stat-trend up"><i class="fas fa-arrow-trend-up"></i> 5%</div>
+      </div>
+      <div class="stat-card glass">
+        <div class="stat-icon orange"><i class="fas fa-calendar-check"></i></div>
+        <div class="stat-info">
+          <p>Total Bookings</p>
+          <h2 class="count-up" data-target="3542">0</h2>
+        </div>
+        <div class="stat-trend up"><i class="fas fa-arrow-trend-up"></i> 8%</div>
+      </div>
+      <div class="stat-card glass">
+        <div class="stat-icon teal"><i class="fas fa-dollar-sign"></i></div>
+        <div class="stat-info">
+          <p>Revenue</p>
+          <h2>$<span class="count-up" data-target="98450">0</span></h2>
+        </div>
+        <div class="stat-trend up"><i class="fas fa-arrow-trend-up"></i> 18%</div>
+      </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="charts-row">
+      <div class="chart-card glass">
+        <div class="chart-header">
+          <h3>Booking Activity</h3>
+          <select><option>This Week</option><option>This Month</option></select>
+        </div>
+        <div class="chart-body">
+          <div class="bar-chart" id="bookingChart"></div>
+        </div>
+      </div>
+      <div class="chart-card glass small">
+        <div class="chart-header"><h3>Room Types</h3></div>
+        <div class="chart-body">
+          <div class="donut-chart" id="donutChart">
+            <svg viewBox="0 0 100 100" class="donut-svg">
+              <circle class="donut-ring" cx="50" cy="50" r="35" fill="none" stroke="var(--border)" stroke-width="12"/>
+              <circle class="donut-seg seg1" cx="50" cy="50" r="35" fill="none" stroke="var(--accent)" stroke-width="12" stroke-dasharray="55 165" stroke-dashoffset="25" />
+              <circle class="donut-seg seg2" cx="50" cy="50" r="35" fill="none" stroke="var(--success)" stroke-width="12" stroke-dasharray="40 180" stroke-dashoffset="-30" />
+              <circle class="donut-seg seg3" cx="50" cy="50" r="35" fill="none" stroke="#f59e0b" stroke-width="12" stroke-dasharray="30 190" stroke-dashoffset="-70" />
+              <circle class="donut-seg seg4" cx="50" cy="50" r="35" fill="none" stroke="#ef4444" stroke-width="12" stroke-dasharray="20 200" stroke-dashoffset="-100" />
+            </svg>
+            <div class="donut-legend">
+              <div><span class="dot" style="background:var(--accent)"></span> Standard 32%</div>
+              <div><span class="dot" style="background:var(--success)"></span> Deluxe 24%</div>
+              <div><span class="dot" style="background:#f59e0b"></span> Suite 18%</div>
+              <div><span class="dot" style="background:#ef4444"></span> Villa 12%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Bookings -->
+    <div class="table-card glass">
+      <div class="table-header">
+        <h3>Recent Bookings</h3>
+        <button class="btn-sm" onclick="showAdminPage('bookings', null)">View All</button>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table" id="recentBookingsTable">
+          <thead>
+            <tr>
+              <th>#ID</th><th>Guest</th><th>Room</th><th>Check-in</th><th>Check-out</th><th>Amount</th><th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="recentBookingsTbody">
+            <tr><td colspan="7" class="loading-cell"><div class="spinner"></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ ROOMS PAGE ============ -->
+  <div id="apage-rooms" class="apage">
+    <div class="page-title">
+      <h1>Room Management</h1>
+      <button class="btn-primary" onclick="openAddRoomModal()">
+        <i class="fas fa-plus"></i> Add Room
+      </button>
+    </div>
+    <div class="table-card glass">
+      <div class="table-header">
+        <div class="table-search">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Search rooms..." oninput="searchTable(this, 'roomsTable')" />
+        </div>
+        <select onchange="filterRoomsTable(this.value)">
+          <option value="">All Types</option>
+          <option value="standard">Standard</option>
+          <option value="deluxe">Deluxe</option>
+          <option value="suite">Suite</option>
+          <option value="villa">Villa</option>
+        </select>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table" id="roomsTable">
+          <thead>
+            <tr>
+              <th>#</th><th>Room</th><th>Type</th><th>Price/Night</th><th>Capacity</th><th>Status</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="roomsTbody">
+            <tr><td colspan="7" class="loading-cell"><div class="spinner"></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ BOOKINGS PAGE ============ -->
+  <div id="apage-bookings" class="apage">
+    <div class="page-title">
+      <h1>Booking Management</h1>
+    </div>
+    <div class="table-card glass">
+      <div class="table-header">
+        <div class="table-search">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Search bookings..." oninput="searchTable(this, 'adminBookingsTable')" />
+        </div>
+        <div class="filter-row">
+          <input type="date" id="filterDateFrom" onchange="filterAdminBookings()" />
+          <input type="date" id="filterDateTo" onchange="filterAdminBookings()" />
+          <select id="filterStatus" onchange="filterAdminBookings()">
+            <option value="">All Status</option>
+            <option value="active">Active</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table" id="adminBookingsTable">
+          <thead>
+            <tr>
+              <th>#ID</th><th>Guest</th><th>Room</th><th>Check-in</th><th>Check-out</th><th>Amount</th><th>Status</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="adminBookingsTbody">
+            <tr><td colspan="8" class="loading-cell"><div class="spinner"></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ USERS PAGE ============ -->
+  <div id="apage-users" class="apage">
+    <div class="page-title">
+      <h1>User Management</h1>
+    </div>
+    <div class="table-card glass">
+      <div class="table-header">
+        <div class="table-search">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Search users..." oninput="searchTable(this, 'usersTable')" />
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table" id="usersTable">
+          <thead>
+            <tr>
+              <th>#</th><th>Name</th><th>Email</th><th>Phone</th><th>Bookings</th><th>Status</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="usersTbody">
+            <tr><td colspan="7" class="loading-cell"><div class="spinner"></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SETTINGS PAGE ============ -->
+  <div id="apage-settings" class="apage">
+    <div class="page-title"><h1>System Settings</h1></div>
+    <div class="settings-layout">
+      <div class="glass settings-card">
+        <h3><i class="fas fa-hotel"></i> Hotel Information</h3>
+        <div class="form-group">
+          <label>Hotel Name</label>
+          <input type="text" id="sHotelName" value="LuxStay Hotel" />
+        </div>
+        <div class="form-group">
+          <label>Tagline</label>
+          <input type="text" id="sTagline" value="Premium Stays Worldwide" />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Contact Email</label>
+            <input type="email" id="sEmail" value="hello@luxstay.com" />
+          </div>
+          <div class="form-group">
+            <label>Phone</label>
+            <input type="tel" id="sPhone" value="+1 555 000 0000" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Address</label>
+          <input type="text" id="sAddress" value="123 Luxury Ave, New York, NY" />
+        </div>
+        <button class="btn-primary" onclick="saveSettings()">Save Changes</button>
+      </div>
+      <div class="glass settings-card">
+        <h3><i class="fas fa-tags"></i> Pricing Settings</h3>
+        <div class="form-group">
+          <label>Base Price / Night ($)</label>
+          <input type="number" id="sBasePrice" value="100" />
+        </div>
+        <div class="form-group">
+          <label>Tax Rate (%)</label>
+          <input type="number" id="sTaxRate" value="12" />
+        </div>
+        <div class="form-group">
+          <label>Service Fee ($)</label>
+          <input type="number" id="sServiceFee" value="20" />
+        </div>
+        <div class="form-group">
+          <label>Currency</label>
+          <select id="sCurrency">
+            <option>USD ($)</option>
+            <option>EUR (€)</option>
+            <option>GBP (£)</option>
+          </select>
+        </div>
+        <button class="btn-primary" onclick="saveSettings()">Save Changes</button>
+      </div>
+      <div class="glass settings-card">
+        <h3><i class="fas fa-sliders"></i> System Preferences</h3>
+        <div class="toggle-group">
+          <div class="toggle-item">
+            <div>
+              <p>Email Notifications</p>
+              <small>Send email on booking</small>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="toggle-item">
+            <div>
+              <p>Auto-confirm Bookings</p>
+              <small>Automatically approve bookings</small>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="toggle-item">
+            <div>
+              <p>Maintenance Mode</p>
+              <small>Disable public access</small>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end admin-main -->
+
+<!-- ============ MODALS ============ -->
+<!-- Add/Edit Room Modal -->
+<div class="modal-overlay" id="roomModal">
+  <div class="modal glass animate-zoom large-modal">
+    <div class="modal-header">
+      <h2 id="roomModalTitle">Add New Room</h2>
+      <button class="modal-close" onclick="closeAdminModal('roomModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Room Name</label>
+          <input type="text" id="mRoomName" placeholder="e.g. Deluxe Ocean View" required />
+        </div>
+        <div class="form-group">
+          <label>Room Type</label>
+          <select id="mRoomType">
+            <option value="standard">Standard</option>
+            <option value="deluxe">Deluxe</option>
+            <option value="suite">Suite</option>
+            <option value="villa">Villa</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Price / Night ($)</label>
+          <input type="number" id="mRoomPrice" placeholder="200" required />
+        </div>
+        <div class="form-group">
+          <label>Capacity (guests)</label>
+          <input type="number" id="mRoomCapacity" placeholder="2" required />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Floor</label>
+          <input type="number" id="mRoomFloor" placeholder="3" />
+        </div>
+        <div class="form-group">
+          <label>Size (sqm)</label>
+          <input type="number" id="mRoomSize" placeholder="45" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea id="mRoomDesc" rows="3" placeholder="Describe the room..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Amenities (comma separated)</label>
+        <input type="text" id="mRoomAmenities" placeholder="WiFi, AC, TV, Mini Bar" />
+      </div>
+      <div class="form-group">
+        <label>Image URL</label>
+        <input type="text" id="mRoomImage" placeholder="https://..." />
+      </div>
+      <div class="form-group">
+        <label>Availability</label>
+        <select id="mRoomAvail">
+          <option value="available">Available</option>
+          <option value="booked">Booked</option>
+          <option value="maintenance">Maintenance</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-outline" onclick="closeAdminModal('roomModal')">Cancel</button>
+      <button class="btn-primary" onclick="saveRoom()">
+        <i class="fas fa-save"></i> Save Room
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirm Modal -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal glass animate-zoom">
+    <div class="modal-icon danger"><i class="fas fa-trash"></i></div>
+    <h2>Delete Room?</h2>
+    <p>This action is irreversible. The room will be permanently deleted.</p>
+    <div class="modal-btns">
+      <button class="btn-outline" onclick="closeAdminModal('deleteModal')">Cancel</button>
+      <button class="btn-danger" onclick="confirmDeleteRoom()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- User Detail Modal -->
+<div class="modal-overlay" id="userModal">
+  <div class="modal glass animate-zoom">
+    <div class="modal-header">
+      <h2>User Details</h2>
+      <button class="modal-close" onclick="closeAdminModal('userModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body" id="userModalBody"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-container" id="adminToast"></div>
+
+<!-- Sidebar Overlay (Mobile) -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<script src="../static/js/admin.js"></script>
+</body>
+</html>
